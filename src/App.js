@@ -8,13 +8,13 @@ function App() {
   const [catFilter, setCatFilter] = useState('ทั้งหมด');
   const [dateFilter, setDateFilter] = useState('ทั้งหมด');
 
-  // 1. ดึงข้อมูลจาก LocalStorage เมื่อเปิดหน้าเว็บ
+
   const [transactions, setTransactions] = useState(() => {
     const savedData = localStorage.getItem('my_transactions');
     return savedData ? JSON.parse(savedData) : [];
   });
 
-  // 2. บันทึกข้อมูลลง LocalStorage ทุกครั้งที่มีการเปลี่ยนแปลง
+  
   useEffect(() => {
     localStorage.setItem('my_transactions', JSON.stringify(transactions));
   }, [transactions]);
@@ -34,7 +34,7 @@ function App() {
     setText(''); setAmount('');
   };
 
-  // ฟังก์ชันลบรายการ
+
   const deleteTransaction = (id) => {
     if (window.confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) {
       const newTransactions = transactions.filter(t => t.id !== id);
@@ -66,7 +66,7 @@ function App() {
 
   return (
     <div className="container">
-      <h2>💰 ถุงเงิน Expense Tracker</h2>
+      <h2>รายรับ - รายจ่าย</h2>
       
       <div className="balance-card">
         <h4>ยอดคงเหลือรวม</h4>
