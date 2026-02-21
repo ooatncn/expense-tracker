@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -8,13 +8,13 @@ function App() {
   const [catFilter, setCatFilter] = useState('ทั้งหมด');
   const [dateFilter, setDateFilter] = useState('ทั้งหมด');
 
-
+  // 1. ดึงข้อมูลจาก LocalStorage เมื่อเปิดหน้าเว็บ
   const [transactions, setTransactions] = useState(() => {
     const savedData = localStorage.getItem('my_transactions');
     return savedData ? JSON.parse(savedData) : [];
   });
 
-
+  // 2. บันทึกข้อมูลลง LocalStorage ทุกครั้งที่มีการเปลี่ยนแปลง
   useEffect(() => {
     localStorage.setItem('my_transactions', JSON.stringify(transactions));
   }, [transactions]);
@@ -22,6 +22,7 @@ function App() {
   const addTransaction = (e) => {
     e.preventDefault();
     if (text === '' || amount === 0 || amount === '') return alert('กรุณากรอกข้อมูลให้ครบ');
+    
     const newTransaction = { 
       id: Math.random(), 
       text, 
@@ -33,9 +34,16 @@ function App() {
     setText(''); setAmount('');
   };
 
+  // ฟังก์ชันลบรายการ
+  const deleteTransaction = (id) => {
+    if (window.confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) {
+      const newTransactions = transactions.filter(t => t.id !== id);
+      setTransactions(newTransactions);
+    }
+  };
+
   const filteredTransactions = transactions.filter(t => {
     const matchCat = catFilter === 'ทั้งหมด' ? true : t.category === catFilter;
-    
     const transDate = new Date(t.date);
     const today = new Date();
     const diffTime = Math.abs(today - transDate);
@@ -49,19 +57,12 @@ function App() {
     } else if (dateFilter === 'เดือนนี้') {
       matchDate = transDate.getMonth() === today.getMonth() && transDate.getFullYear() === today.getFullYear();
     }
-
     return matchCat && matchDate;
   });
 
   const total = transactions.reduce((acc, item) => acc + item.amount, 0).toFixed(2);
-
-  const income = transactions
-    .filter(item => item.amount > 0)
-    .reduce((acc, item) => acc + item.amount, 0).toFixed(2);
-
-  const expense = (transactions
-    .filter(item => item.amount < 0)
-    .reduce((acc, item) => acc + item.amount, 0) * -1).toFixed(2);
+  const income = transactions.filter(t => t.amount > 0).reduce((acc, t) => acc + t.amount, 0).toFixed(2);
+  const expense = (transactions.filter(t => t.amount < 0).reduce((acc, t) => acc + t.amount, 0) * -1).toFixed(2);
 
   return (
     <div className="container">
@@ -112,7 +113,10 @@ function App() {
               <strong>{t.text}</strong> <small>({t.category})</small>
               <br/><span className="date">{new Date(t.date).toLocaleDateString('th-TH')}</span>
             </div>
-            <span>{t.amount < 0 ? '-' : '+'}{Math.abs(t.amount)}</span>
+            <div className="list-right">
+              <span>{t.amount < 0 ? '-' : '+'}{Math.abs(t.amount)}</span>
+              <button className="delete-btn" onClick={() => deleteTransaction(t.id)}>x</button>
+            </div>
           </li>
         ))}
         {filteredTransactions.length === 0 && <p style={{textAlign:'center', color:'#888', margin:'20px'}}>ไม่พบรายการ</p>}
