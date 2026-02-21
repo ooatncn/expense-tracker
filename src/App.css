@@ -1,10 +1,14 @@
-.container { margin: 20px auto; width: 380px; font-family: 'Kanit', sans-serif; }
-.balance-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-.filter-group { display: flex; gap: 10px; margin: 20px 0; }
-.filter-item { flex: 1; background: #f0f0f0; padding: 10px; border-radius: 10px; font-size: 12px; }
-.filter-item select { width: 100%; margin-top: 5px; border: none; background: transparent; font-weight: bold; }
-.list li { background: #fff; padding: 15px; margin-bottom: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-.date { font-size: 10px; color: #888; }
-.add-form { background: #f9f9f9; padding: 20px; border-radius: 15px; margin-top: 20px; border: 1px solid #ddd; }
-input, select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-.btn { cursor: pointer; background-color: #6c5ce7; color: #fff; width: 100%; padding: 12px; border: 0; border-radius: 5px; font-size: 16px; }
+.inc-exp-container {
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  border-radius: 15px;
+}
+.inc-exp-container > div { flex: 1; text-align: center; }
+.inc-exp-container > div:first-of-type { border-right: 1px solid #dedede; }
+.money { font-size: 18px; font-weight: bold; margin-top: 5px; }
+.money.plus { color: #2ecc71; }
+.money.minus { color: #e74c3c; }

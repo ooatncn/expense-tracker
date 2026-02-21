@@ -23,10 +23,8 @@ function App() {
     setText(''); setAmount('');
   };
 
-
   const filteredTransactions = transactions.filter(t => {
     const matchCat = catFilter === 'ทั้งหมด' ? true : t.category === catFilter;
-    
     const today = new Date();
     const diffTime = Math.abs(today - t.date);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
@@ -37,21 +35,41 @@ function App() {
     } else if (dateFilter === '7วันล่าสุด') {
       matchDate = diffDays <= 7;
     } else if (dateFilter === 'เดือนนี้') {
-   
       matchDate = t.date.getMonth() === today.getMonth() && t.date.getFullYear() === today.getFullYear();
     }
-
     return matchCat && matchDate;
   });
 
   const total = transactions.reduce((acc, item) => acc + item.amount, 0).toFixed(2);
 
+  const income = transactions
+    .filter(item => item.amount > 0)
+    .reduce((acc, item) => acc + item.amount, 0).toFixed(2);
+
+  const expense = (transactions
+    .filter(item => item.amount < 0)
+    .reduce((acc, item) => acc + item.amount, 0) * -1).toFixed(2);
+
   return (
     <div className="container">
-      <h2>ค่าใช้จ่าย</h2>
+      <h2>รายรับ - รายจ่าย</h2>
+      
+      {/* ส่วน Dashboard หลัก */}
       <div className="balance-card">
-        <h4>ยอดใช้จ่ายรวม</h4>
+        <h4>ยอดคงเหลือรวม</h4>
         <h1>฿{total}</h1>
+      </div>
+
+      {/* ส่วน Dashboard รายรับ-รายจ่ายที่เพิ่มเข้ามา */}
+      <div className="inc-exp-container">
+        <div className="inc-box">
+          <h4>รายรับ</h4>
+          <p className="money plus">+฿{income}</p>
+        </div>
+        <div className="exp-box">
+          <h4>รายจ่าย</h4>
+          <p className="money minus">-฿{expense}</p>
+        </div>
       </div>
 
       <div className="filter-group">
@@ -86,13 +104,13 @@ function App() {
             <span>{t.amount < 0 ? '-' : '+'}{Math.abs(t.amount)}</span>
           </li>
         ))}
-        {filteredTransactions.length === 0 && <p style={{textAlign:'center', color:'#888'}}>ไม่พบรายการ</p>}
+        {filteredTransactions.length === 0 && <p style={{textAlign:'center', color:'#888', margin: '20px 0'}}>ไม่พบรายการ</p>}
       </ul>
 
       <form onSubmit={addTransaction} className="add-form">
         <h3>➕ เพิ่มรายการใหม่</h3>
         <input type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder="ชื่อรายการ..." />
-        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="จำนวนเงิน (ลบ=รายจ่าย)" />
+        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="จำนวนเงิน (บวก=รายรับ / ลบ=รายจ่าย)" />
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="อาหาร">อาหาร</option>
           <option value="เดินทาง">เดินทาง</option>
